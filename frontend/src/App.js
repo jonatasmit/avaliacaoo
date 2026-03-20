@@ -3,13 +3,14 @@ import "./App.css";
 import { 
   Truck, Shield, CreditCard, Clock, Award, Users, 
   CheckCircle, Star, Package, MapPin, Play, Volume2, VolumeX,
-  ChevronDown, MessageCircle
+  ChevronDown, MessageCircle, Menu, X, ChevronRight, Syringe, Pill
 } from "lucide-react";
 
 // URLs das mídias
 const VIDEO_URL = "http://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/avaliacoes.mp4";
 const AUDIO_URL = "http://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/B-Dynamitze-Quer-Ficar-Grandao-CLIP-OFICIAL-B-DYNAMITZE-OFFICIAL-youtube-mp3cut.net_.mp3";
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_cb62d599-aee6-476d-9abd-89f0590dfbd5/artifacts/g34piw1w_IMG_3116.png";
+const MASCOTE_URL = "https://customer-assets.emergentagent.com/job_confidence-builder-14/artifacts/tix9i9rh_maromba%20%282%29.png";
 
 // Imagens anexadas
 const IMAGES = {
@@ -19,9 +20,29 @@ const IMAGES = {
   videoAvaliacoes: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/pvm7x6nt_avalia%C3%A7%C3%B5es.mp4"
 };
 
-// WhatsApp number
-const WHATSAPP_NUMBER = "5521972232170";
-const WHATSAPP_MESSAGE = "Olá! Vim da página de avaliações e gostaria de fazer um pedido.";
+// Menu items
+const MENU_ITEMS = {
+  injetaveis: {
+    title: "Injetáveis Clássicos",
+    icon: "syringe",
+    items: ["Testosterona", "Deposteron", "Propionato", "Enantato", "Deca-Durabolin", "Durateston", "Primobolan", "Boldenona", "Trembolona"]
+  },
+  orais: {
+    title: "Orais",
+    icon: "pill",
+    items: ["Dianabol", "Oxandrolona", "Stanozolol", "Hemogenin", "Halotestin"]
+  }
+};
+
+// Função para abrir o chat Crisp
+const openCrispChat = (message = "") => {
+  if (window.$crisp) {
+    window.$crisp.push(["do", "chat:open"]);
+    if (message) {
+      window.$crisp.push(["do", "message:send", ["text", message]]);
+    }
+  }
+};
 
 // Componente de contador animado
 const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
@@ -68,44 +89,124 @@ const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
   );
 };
 
-// Floating WhatsApp Button
-const FloatingWhatsApp = () => {
+// Mascote Background Component
+const MascoteBackground = () => {
   return (
-    <a 
-      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
-      className="floating-whatsapp"
-      target="_blank"
-      rel="noopener noreferrer"
-      data-testid="floating-whatsapp"
-      aria-label="Falar no WhatsApp"
-    >
-      <div className="whatsapp-pulse"></div>
-      <i className="fab fa-whatsapp"></i>
-    </a>
+    <>
+      <div className="mascote-bg mascote-bg-1">
+        <img src={MASCOTE_URL} alt="" aria-hidden="true" />
+      </div>
+      <div className="mascote-bg mascote-bg-2">
+        <img src={MASCOTE_URL} alt="" aria-hidden="true" />
+      </div>
+      <div className="mascote-bg mascote-bg-3">
+        <img src={MASCOTE_URL} alt="" aria-hidden="true" />
+      </div>
+    </>
   );
 };
 
-// Header component
+// Header component with Menu
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuItemClick = (item) => {
+    openCrispChat(`Olá! Tenho interesse em ${item}. Gostaria de mais informações.`);
+    setIsMenuOpen(false);
+  };
+
+  const handleAvaliacoesClick = () => {
+    openCrispChat("Olá! Vim da página de avaliações e gostaria de fazer um pedido.");
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="header">
       <div className="header-content">
         <div className="logo-section">
           <img src={LOGO_URL} alt="Suplementos Mais Baratos" className="logo-image" />
-          <div className="logo-info">
-            <span className="brand-name">SUPLEMENTOS MAIS BARATOS</span>
-            <span className="brand-tagline">10+ Anos de Confiança</span>
+        </div>
+        
+        <div className="header-actions">
+          <button 
+            className="menu-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            data-testid="menu-toggle"
+            aria-label="Menu"
+          >
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+          
+          <button 
+            className="header-cta"
+            onClick={() => openCrispChat()}
+            data-testid="header-chat-btn"
+          >
+            <MessageCircle size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* Dropdown Menu */}
+      <div className={`dropdown-menu ${isMenuOpen ? 'active' : ''}`}>
+        <div className="menu-section">
+          <div className="menu-section-title">
+            <Syringe size={18} />
+            <span>Injetáveis Clássicos</span>
+          </div>
+          <div className="menu-items">
+            {MENU_ITEMS.injetaveis.items.map((item, index) => (
+              <button 
+                key={index}
+                className="menu-item"
+                onClick={() => handleMenuItemClick(item)}
+                data-testid={`menu-item-${item.toLowerCase()}`}
+              >
+                {item}
+                <ChevronRight size={16} />
+              </button>
+            ))}
           </div>
         </div>
-        <a 
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
-          className="header-cta"
-          data-testid="header-whatsapp-btn"
-        >
-          <i className="fab fa-whatsapp"></i>
-          FALAR COM VENDEDOR
-        </a>
+
+        <div className="menu-section">
+          <div className="menu-section-title orais">
+            <Pill size={18} />
+            <span>Orais</span>
+          </div>
+          <div className="menu-items">
+            {MENU_ITEMS.orais.items.map((item, index) => (
+              <button 
+                key={index}
+                className="menu-item"
+                onClick={() => handleMenuItemClick(item)}
+                data-testid={`menu-item-${item.toLowerCase()}`}
+              >
+                {item}
+                <ChevronRight size={16} />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="menu-section">
+          <button 
+            className="menu-section-title avaliacoes clickable"
+            onClick={handleAvaliacoesClick}
+          >
+            <MessageCircle size={18} />
+            <span>Avaliações</span>
+          </button>
+        </div>
       </div>
+
+      {/* Overlay */}
+      {isMenuOpen && (
+        <div 
+          className="menu-overlay"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
     </header>
   );
 };
@@ -491,14 +592,14 @@ const CTASection = () => {
           </div>
         </div>
 
-        <a 
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
+        <button 
           className="cta-button"
-          data-testid="cta-whatsapp-btn"
+          onClick={() => openCrispChat("Olá! Vim da página de avaliações e gostaria de fazer um pedido.")}
+          data-testid="cta-chat-btn"
         >
-          <i className="fab fa-whatsapp"></i>
-          COMPRAR AGORA VIA WHATSAPP
-        </a>
+          <MessageCircle />
+          FALAR COM ESPECIALISTA
+        </button>
 
         <p className="cta-note">
           Atendimento de Segunda a Sábado, das 9h às 18h
@@ -522,9 +623,9 @@ const Footer = () => {
           <a href="https://www.suplementosmaisbaratos.com.br" target="_blank" rel="noopener noreferrer">
             Site Principal
           </a>
-          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
-            WhatsApp
-          </a>
+          <button onClick={() => openCrispChat()} className="footer-link-btn">
+            Fale Conosco
+          </button>
         </div>
 
         <div className="footer-trust">
@@ -555,7 +656,6 @@ const AudioPlayer = ({ hasInteracted }) => {
         .then(() => setIsPlaying(true))
         .catch(e => {
           console.log('Audio autoplay prevented:', e);
-          // Try again with user gesture
         });
     }
   }, [hasInteracted, isPlaying, audioError]);
@@ -622,7 +722,6 @@ function App() {
   };
 
   useEffect(() => {
-    // Add interaction listeners for first user interaction
     const handleFirstInteraction = () => {
       if (!hasInteracted) {
         setHasInteracted(true);
@@ -642,8 +741,8 @@ function App() {
 
   return (
     <div className="App" data-testid="confidence-page">
+      <MascoteBackground />
       <AudioPlayer hasInteracted={hasInteracted} />
-      <FloatingWhatsApp />
       <Header />
       <HeroSection onInteraction={handleInteraction} hasInteracted={hasInteracted} />
       <VideoSection hasInteracted={hasInteracted} />
