@@ -3,12 +3,13 @@ import "./App.css";
 import { 
   Truck, Shield, CreditCard, Clock, Award, Users, 
   CheckCircle, Star, Package, MapPin, Play, Volume2, VolumeX,
-  ChevronDown
+  ChevronDown, MessageCircle
 } from "lucide-react";
 
 // URLs das mídias
 const VIDEO_URL = "http://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/avaliacoes.mp4";
 const AUDIO_URL = "http://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/B-Dynamitze-Quer-Ficar-Grandao-CLIP-OFICIAL-B-DYNAMITZE-OFFICIAL-youtube-mp3cut.net_.mp3";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_cb62d599-aee6-476d-9abd-89f0590dfbd5/artifacts/g34piw1w_IMG_3116.png";
 
 // Imagens anexadas
 const IMAGES = {
@@ -17,6 +18,10 @@ const IMAGES = {
   envios: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/v8cj5uxx_envios.jpeg",
   videoAvaliacoes: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/pvm7x6nt_avalia%C3%A7%C3%B5es.mp4"
 };
+
+// WhatsApp number
+const WHATSAPP_NUMBER = "5521972232170";
+const WHATSAPP_MESSAGE = "Olá! Vim da página de avaliações e gostaria de fazer um pedido.";
 
 // Componente de contador animado
 const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
@@ -63,22 +68,37 @@ const AnimatedCounter = ({ end, duration = 2000, suffix = "" }) => {
   );
 };
 
+// Floating WhatsApp Button
+const FloatingWhatsApp = () => {
+  return (
+    <a 
+      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
+      className="floating-whatsapp"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-testid="floating-whatsapp"
+      aria-label="Falar no WhatsApp"
+    >
+      <div className="whatsapp-pulse"></div>
+      <i className="fab fa-whatsapp"></i>
+    </a>
+  );
+};
+
 // Header component
 const Header = () => {
   return (
     <header className="header">
       <div className="header-content">
         <div className="logo-section">
-          <div className="logo-badge">
-            <span className="logo-text">MB</span>
-          </div>
+          <img src={LOGO_URL} alt="Suplementos Mais Baratos" className="logo-image" />
           <div className="logo-info">
             <span className="brand-name">SUPLEMENTOS MAIS BARATOS</span>
             <span className="brand-tagline">10+ Anos de Confiança</span>
           </div>
         </div>
         <a 
-          href="https://wa.me/5521972232170?text=Olá! Vim da página de avaliações e gostaria de fazer um pedido."
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
           className="header-cta"
           data-testid="header-whatsapp-btn"
         >
@@ -103,6 +123,8 @@ const HeroSection = ({ onInteraction, hasInteracted }) => {
   return (
     <section className="hero-section" onClick={onInteraction}>
       <div className="hero-overlay"></div>
+      <div className="hero-glow hero-glow-1"></div>
+      <div className="hero-glow hero-glow-2"></div>
       <div className="hero-content">
         <div className="trust-badge-hero">
           <Shield className="badge-icon" />
@@ -110,7 +132,7 @@ const HeroSection = ({ onInteraction, hasInteracted }) => {
         </div>
         
         <h1 className="hero-title">
-          POR QUE <span className="highlight">+50.000 CLIENTES</span><br />
+          POR QUE <span className="highlight">+21.000 CLIENTES</span><br />
           CONFIAM NA GENTE?
         </h1>
         
@@ -120,7 +142,7 @@ const HeroSection = ({ onInteraction, hasInteracted }) => {
 
         <div className="hero-stats">
           <div className="stat-item">
-            <span className="stat-number"><AnimatedCounter end={50000} suffix="+" /></span>
+            <span className="stat-number"><AnimatedCounter end={21000} suffix="+" /></span>
             <span className="stat-label">Clientes Satisfeitos</span>
           </div>
           <div className="stat-divider"></div>
@@ -168,13 +190,14 @@ const VideoSection = ({ hasInteracted }) => {
     <section id="video-section" className="video-section">
       <div className="section-header">
         <span className="section-badge">DEPOIMENTOS REAIS</span>
-        <h2 className="section-title">Veja o Que Nossos Clientes Dizem</h2>
+        <h2 className="section-title">Veja o Que Nossos <span className="gradient-text">Clientes Dizem</span></h2>
         <p className="section-subtitle">
           Avaliações 100% autênticas de clientes que já compraram conosco
         </p>
       </div>
 
       <div className="video-container">
+        <div className="video-glow"></div>
         <video 
           ref={videoRef}
           className="main-video"
@@ -224,6 +247,11 @@ const TrustFeatures = () => {
       description: "Pedido despachado em até 24-48 horas úteis"
     },
     {
+      icon: <MessageCircle />,
+      title: "Rastreio WhatsApp",
+      description: "Acompanhe seu pedido em tempo real pelo WhatsApp"
+    },
+    {
       icon: <Shield />,
       title: "Garantia 7 Dias",
       description: "Não gostou? Devolvemos seu dinheiro em até 7 dias"
@@ -235,8 +263,8 @@ const TrustFeatures = () => {
     },
     {
       icon: <Users />,
-      title: "+50.000 Clientes",
-      description: "Maior comunidade fitness do Brasil"
+      title: "+21.000 Clientes",
+      description: "Comunidade fitness que cresce a cada dia"
     },
     {
       icon: <CheckCircle />,
@@ -249,7 +277,7 @@ const TrustFeatures = () => {
     <section className="trust-features">
       <div className="section-header">
         <span className="section-badge">NOSSAS GARANTIAS</span>
-        <h2 className="section-title">Compre com Total Segurança</h2>
+        <h2 className="section-title">Compre com <span className="gradient-text">Total Segurança</span></h2>
       </div>
 
       <div className="features-grid">
@@ -271,7 +299,7 @@ const SocialProof = () => {
     <section className="social-proof">
       <div className="section-header">
         <span className="section-badge">PROVA SOCIAL</span>
-        <h2 className="section-title">Presença e Credibilidade</h2>
+        <h2 className="section-title">Presença e <span className="gradient-text">Credibilidade</span></h2>
         <p className="section-subtitle">
           Patrocinadores oficiais de eventos fitness e milhares de envios diários
         </p>
@@ -351,7 +379,7 @@ const PaymentMethods = () => {
     <section className="payment-section">
       <div className="section-header">
         <span className="section-badge">FORMAS DE PAGAMENTO</span>
-        <h2 className="section-title">Pague Como Preferir</h2>
+        <h2 className="section-title">Pague Como <span className="gradient-text">Preferir</span></h2>
         <p className="section-subtitle">Aceitamos todas as bandeiras em até 12x sem juros</p>
       </div>
 
@@ -392,7 +420,7 @@ const TestimonialsStats = () => {
             <Users />
           </div>
           <div className="stat-content">
-            <span className="stat-value"><AnimatedCounter end={50000} suffix="+" /></span>
+            <span className="stat-value"><AnimatedCounter end={21000} suffix="+" /></span>
             <span className="stat-name">Clientes Atendidos</span>
           </div>
         </div>
@@ -402,7 +430,7 @@ const TestimonialsStats = () => {
             <Package />
           </div>
           <div className="stat-content">
-            <span className="stat-value"><AnimatedCounter end={120000} suffix="+" /></span>
+            <span className="stat-value"><AnimatedCounter end={45000} suffix="+" /></span>
             <span className="stat-name">Pedidos Entregues</span>
           </div>
         </div>
@@ -435,18 +463,23 @@ const TestimonialsStats = () => {
 const CTASection = () => {
   return (
     <section className="cta-section">
+      <div className="cta-glow"></div>
       <div className="cta-content">
         <h2 className="cta-title">
-          Pronto Para <span className="highlight">Transformar</span> Seu Físico?
+          Pronto Para <span className="gradient-text">Transformar</span> Seu Físico?
         </h2>
         <p className="cta-subtitle">
-          Junte-se a mais de 50.000 clientes satisfeitos e comece sua transformação hoje!
+          Junte-se a mais de 21.000 clientes satisfeitos e comece sua transformação hoje!
         </p>
         
         <div className="cta-benefits">
           <div className="cta-benefit">
             <CheckCircle />
             <span>Frete Grátis Brasil</span>
+          </div>
+          <div className="cta-benefit">
+            <CheckCircle />
+            <span>Rastreio via WhatsApp</span>
           </div>
           <div className="cta-benefit">
             <CheckCircle />
@@ -459,7 +492,7 @@ const CTASection = () => {
         </div>
 
         <a 
-          href="https://wa.me/5521972232170?text=Olá! Vim da página de avaliações e gostaria de fazer um pedido."
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
           className="cta-button"
           data-testid="cta-whatsapp-btn"
         >
@@ -481,9 +514,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-brand">
-          <div className="logo-badge small">
-            <span className="logo-text">MB</span>
-          </div>
+          <img src={LOGO_URL} alt="Suplementos Mais Baratos" className="footer-logo" />
           <span>Suplementos Mais Baratos</span>
         </div>
 
@@ -491,7 +522,7 @@ const Footer = () => {
           <a href="https://www.suplementosmaisbaratos.com.br" target="_blank" rel="noopener noreferrer">
             Site Principal
           </a>
-          <a href="https://wa.me/5521972232170" target="_blank" rel="noopener noreferrer">
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
             WhatsApp
           </a>
         </div>
@@ -504,7 +535,7 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <p>© 2016-2026 Suplementos Mais Baratos. Todos os direitos reservados.</p>
-        <p>CNPJ: XX.XXX.XXX/0001-XX | 10+ Anos de Mercado</p>
+        <p>Sucesso Vip Empreendimentos | CNPJ: 21.534.683/0001-37 | 10+ Anos de Mercado</p>
       </div>
     </footer>
   );
@@ -524,7 +555,7 @@ const AudioPlayer = ({ hasInteracted }) => {
         .then(() => setIsPlaying(true))
         .catch(e => {
           console.log('Audio autoplay prevented:', e);
-          setAudioError(true);
+          // Try again with user gesture
         });
     }
   }, [hasInteracted, isPlaying, audioError]);
@@ -549,7 +580,7 @@ const AudioPlayer = ({ hasInteracted }) => {
   };
 
   const handleError = () => {
-    console.log('Audio source error - using fallback');
+    console.log('Audio source error');
     setAudioError(true);
   };
 
@@ -561,7 +592,6 @@ const AudioPlayer = ({ hasInteracted }) => {
         preload="auto"
         data-testid="background-audio"
         onError={handleError}
-        crossOrigin="anonymous"
       >
         <source src={AUDIO_URL} type="audio/mpeg" />
         <source src="https://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/B-Dynamitze-Quer-Ficar-Grandao-CLIP-OFICIAL-B-DYNAMITZE-OFFICIAL-youtube-mp3cut.net_.mp3" type="audio/mpeg" />
@@ -613,6 +643,7 @@ function App() {
   return (
     <div className="App" data-testid="confidence-page">
       <AudioPlayer hasInteracted={hasInteracted} />
+      <FloatingWhatsApp />
       <Header />
       <HeroSection onInteraction={handleInteraction} hasInteracted={hasInteracted} />
       <VideoSection hasInteracted={hasInteracted} />
