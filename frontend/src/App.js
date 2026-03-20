@@ -16,7 +16,7 @@ const MASCOTE_URL = "https://customer-assets.emergentagent.com/job_confidence-bu
 const IMAGES = {
   patrocinio1: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/33g9f9tp_patrocinio%201.jpeg",
   patrocinio2: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/v0kszs3c_patrocinio%202.jpeg",
-  envios: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/v8cj5uxx_envios.jpeg",
+  envios: "http://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/envios.png",
   videoAvaliacoes: "https://customer-assets.emergentagent.com/job_d928858b-27ad-40e7-8a17-fdf6b21a326e/artifacts/pvm7x6nt_avalia%C3%A7%C3%B5es.mp4"
 };
 
