@@ -127,9 +127,56 @@ const Header = () => {
           <img src={LOGO_URL} alt="Suplementos Mais Baratos" className="logo-image" />
         </div>
         
+        {/* Desktop Navigation */}
+        <nav className="desktop-nav">
+          <div className="nav-dropdown">
+            <button className="nav-dropdown-trigger">
+              <Syringe size={16} />
+              <span>Injetáveis Clássicos</span>
+              <ChevronDown size={14} />
+            </button>
+            <div className="nav-dropdown-content">
+              {MENU_ITEMS.injetaveis.items.map((item, index) => (
+                <button 
+                  key={index}
+                  className="nav-dropdown-item"
+                  onClick={() => handleMenuItemClick(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="nav-dropdown">
+            <button className="nav-dropdown-trigger orais">
+              <Pill size={16} />
+              <span>Orais</span>
+              <ChevronDown size={14} />
+            </button>
+            <div className="nav-dropdown-content">
+              {MENU_ITEMS.orais.items.map((item, index) => (
+                <button 
+                  key={index}
+                  className="nav-dropdown-item"
+                  onClick={() => handleMenuItemClick(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button className="nav-item avaliacoes" onClick={handleAvaliacoesClick}>
+            <MessageCircle size={16} />
+            <span>Avaliações</span>
+          </button>
+        </nav>
+
         <div className="header-actions">
+          {/* Mobile menu toggle */}
           <button 
-            className="menu-toggle"
+            className="menu-toggle mobile-only"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             data-testid="menu-toggle"
             aria-label="Menu"
@@ -147,8 +194,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Dropdown Menu */}
-      <div className={`dropdown-menu ${isMenuOpen ? 'active' : ''}`}>
+      {/* Mobile Dropdown Menu */}
+      <div className={`dropdown-menu mobile-only ${isMenuOpen ? 'active' : ''}`}>
         <div className="menu-section">
           <div className="menu-section-title">
             <Syringe size={18} />
@@ -203,7 +250,7 @@ const Header = () => {
       {/* Overlay */}
       {isMenuOpen && (
         <div 
-          className="menu-overlay"
+          className="menu-overlay mobile-only"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
