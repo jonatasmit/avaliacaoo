@@ -515,40 +515,66 @@ const AudioPlayer = ({ hasInteracted }) => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
   useEffect(() => {
-    if (hasInteracted && audioRef.current && !isPlaying) {
+    if (hasInteracted && audioRef.current && !isPlaying && !audioError) {
       audioRef.current.volume = 0.3;
       audioRef.current.play()
         .then(() => setIsPlaying(true))
-        .catch(e => console.log('Audio autoplay prevented:', e));
+        .catch(e => {
+          console.log('Audio autoplay prevented:', e);
+          setAudioError(true);
+        });
     }
-  }, [hasInteracted, isPlaying]);
+  }, [hasInteracted, isPlaying, audioError]);
 
   const toggleMute = () => {
     if (audioRef.current) {
-      audioRef.current.muted = !audioRef.current.muted;
-      setIsMuted(!isMuted);
+      if (!isPlaying && !audioError) {
+        audioRef.current.play()
+          .then(() => {
+            setIsPlaying(true);
+            setIsMuted(false);
+          })
+          .catch(e => {
+            console.log('Audio play error:', e);
+            setAudioError(true);
+          });
+      } else {
+        audioRef.current.muted = !audioRef.current.muted;
+        setIsMuted(!isMuted);
+      }
     }
+  };
+
+  const handleError = () => {
+    console.log('Audio source error - using fallback');
+    setAudioError(true);
   };
 
   return (
     <>
       <audio 
         ref={audioRef} 
-        src={AUDIO_URL} 
         loop 
         preload="auto"
         data-testid="background-audio"
-      />
+        onError={handleError}
+        crossOrigin="anonymous"
+      >
+        <source src={AUDIO_URL} type="audio/mpeg" />
+        <source src="https://www.suplementosmaisbaratos.com.br/wp-content/uploads/2026/03/B-Dynamitze-Quer-Ficar-Grandao-CLIP-OFICIAL-B-DYNAMITZE-OFFICIAL-youtube-mp3cut.net_.mp3" type="audio/mpeg" />
+      </audio>
       {hasInteracted && (
         <button 
           className="audio-toggle"
           onClick={toggleMute}
           data-testid="audio-toggle-btn"
           aria-label={isMuted ? "Ativar som" : "Desativar som"}
+          title={audioError ? "Áudio indisponível" : (isMuted ? "Ativar som" : "Desativar som")}
         >
-          {isMuted ? <VolumeX /> : <Volume2 />}
+          {audioError ? <VolumeX /> : (isMuted ? <VolumeX /> : <Volume2 />)}
         </button>
       )}
     </>
